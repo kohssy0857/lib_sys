@@ -1,5 +1,7 @@
 use std::io;
+use rusqlite::{params, Connection, Result};
 
+#[derive(Debug)]
 
 fn main() {
     loop{
