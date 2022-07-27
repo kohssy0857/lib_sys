@@ -1,9 +1,8 @@
+// #[derive(Debug)]
 use rusqlite::{params, Connection, Result};
 use std::io;
 
-#[derive(Debug)]
-
-fn main() {
+fn main() -> Result<()> {
     loop {
         let cn = Connection::open_in_memory()?;
         cn.execute(
@@ -49,4 +48,5 @@ fn main() {
             continue;
         }
     }
+    Ok()
 }
