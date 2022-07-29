@@ -40,19 +40,18 @@ fn main() -> Result<()> {
             "幻冬舎",
             1400,
         ])?;
+        println!("テーブルを作成しました。");
         
     loop {
-        println!("1 テーブル作成");
-        println!("2 レコード追加");
-        println!("0 終了");
+        println!("1:テーブル作成");
+        println!("2:レコード追加");
+        println!("0:終了");
         // ........
         let mut guess = String::new();
         io::stdin()
             .read_line(&mut guess)
             .expect("Failed to read line.");
-        if &guess.trim() == &"1" {
-          println!("1番が押された");
-        } else if &guess.trim() == &"2" {
+         if &guess.trim() == &"2" {
         } else if &guess.trim() == &"3" {
             let mut guess = String::new();
             io::stdin().read_line(&mut guess).expect("Failed to read line.");
@@ -61,7 +60,7 @@ fn main() -> Result<()> {
             println!("↓↓");
             println!("↓↓");
             println!("idを入力してください");
-            println!("00 終了");
+            println!("00:終了");
             let mut stmt = cn.prepare("select * from book")?;
             // クロージャを使用してデータを取得して構造体 book にセット
             for it in stmt.query_map(params![], |row| {
