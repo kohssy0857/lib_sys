@@ -45,6 +45,8 @@ fn main() -> Result<()> {
     loop {
         println!("1:テーブル作成");
         println!("2:レコード追加");
+        println!("6asc レコードを価格の昇順で表示");
+        println!("6desc レコードを価格の降順で表示");
         println!("0:終了");
         // ........
         let mut guess = String::new();
@@ -91,7 +93,7 @@ fn main() -> Result<()> {
           }
 
         } else if &guess.trim() == &"3" {
-             println!("値を検索するカラムを選択してください");
+            println!("値を検索するカラムを選択してください");
             println!("1:id");
             println!("2:タイトル");
             println!("3:作者");
@@ -239,6 +241,107 @@ fn main() -> Result<()> {
           }
         } else if &guess.trim() == &"5" {
           
+        } else if &guess.trim() == &"6asc" {
+            let mut stmt = cn.prepare(
+                "select * from book order by price asc"
+            )?;
+            let mut rows = stmt.query(params![])?;
+            while let Some(row) = rows.next()? {
+                let id: i32 = row.get(0)?;
+                let title: String = row.get(1)?;
+                let auther: String = row.get(2)?;
+                let page: i32 = row.get(3)?;
+                let publisher: String = row.get(4)?;
+                let price: i32 = row.get(5)?;
+                println!("id: {}, title: {}, author: {}, page: {}, publisher: {}, price: {}",
+                    id, title, auther, page, publisher, price);
+            }
+        } else if &guess.trim() == &"6desc" {
+            let mut stmt = cn.prepare(
+                "select * from book order by price desc"
+            )?;
+            let mut rows = stmt.query(params![])?;
+            while let Some(row) = rows.next()? {
+                let id: i32 = row.get(0)?;
+                let title: String = row.get(1)?;
+                let auther: String = row.get(2)?;
+                let page: i32 = row.get(3)?;
+                let publisher: String = row.get(4)?;
+                let price: i32 = row.get(5)?;
+                println!("id: {}, title: {}, auther: {}, page: {}, publisher: {}, price: {}",
+                    id, title, auther, page, publisher, price);
+            }
+        } else if &guess.trim() == &"7" {
+            // /////////////////////////////////////////////////////////////////////
+            println!("値を検索するカラムを選択してください");
+            println!("1:id");
+            println!("2:ページ数");
+            println!("3:価格");
+
+            let mut col = String::new();
+            io::stdin()
+                .read_line(&mut col)
+                .expect("Failed to read line.");
+            let col = col.trim();
+            println!("下限の値を指定してください");
+            let mut min = String::new();
+            io::stdin()
+                .read_line(&mut min)
+                .expect("Failed to read line.");
+            let min = min.trim();
+            println!("上限の値を指定してください");
+            let mut max = String::new();
+            io::stdin()
+                .read_line(&mut max)
+                .expect("Failed to read line.");
+            let max = max.trim();
+
+            if col == "1" {
+                let mut n = cn.prepare(r"SELECT * FROM book where id BETWEEN ? AND ? ")?;
+                let iter = n.query_map(params![min, max], |row| {
+                    Ok(Book {
+                        id: row.get(0)?,
+                        title: row.get(1)?,
+                        auther: row.get(2)?,
+                        page: row.get(3)?,
+                        publisher: row.get(4)?,
+                        price: row.get(5)?,
+                    })
+                })?;
+                for it in iter {
+                    println!("{:?}", it);
+                }
+            } else if col == "2" {
+                let mut n = cn.prepare(r"SELECT * FROM book where page LIKEBETWEEN ? AND ? ")?;
+                let iter = n.query_map(params![min, max], |row| {
+                    Ok(Book {
+                        id: row.get(0)?,
+                        title: row.get(1)?,
+                        auther: row.get(2)?,
+                        page: row.get(3)?,
+                        publisher: row.get(4)?,
+                        price: row.get(5)?,
+                    })
+                })?;
+                for it in iter {
+                    println!("{:?}", it);
+                }
+            } else if col == "3" {
+                let mut n = cn.prepare(r"SELECT * FROM book where price LIKE BETWEEN ? AND ? ")?;
+                let iter = n.query_map(params![min, max], |row| {
+                    Ok(Book {
+                        id: row.get(0)?,
+                        title: row.get(1)?,
+                        auther: row.get(2)?,
+                        page: row.get(3)?,
+                        publisher: row.get(4)?,
+                        price: row.get(5)?,
+                    })
+                })?;
+                for it in iter {
+                    println!("{:?}", it);
+                }
+            }
         } else if &guess.trim() == &"0" {
           break
         } else {
