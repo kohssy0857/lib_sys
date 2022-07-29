@@ -16,8 +16,7 @@ struct Book {
 
 
 fn main() -> Result<()> {
-    loop {
-        let cn = Connection::open_in_memory()?;
+  let cn = Connection::open_in_memory()?;
         cn.execute(
             "CREATE TABLE book (id INTEGER,title TEXT,auther TEXT,page INTEGER,publisher TEXT,price INTEGER)",
             params![],
@@ -41,6 +40,8 @@ fn main() -> Result<()> {
             "幻冬舎",
             1400,
         ])?;
+        
+    loop {
         println!("1 テーブル作成");
         println!("2 レコード追加");
         println!("0 終了");
