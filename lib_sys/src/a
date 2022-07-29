@@ -1,0 +1,45 @@
+use std::io;
+use std::env;
+use rusqlite::{params, Connection, Result};
+use chrono::{Local, Date};
+use chrono::prelude::*;
+
+
+fn main() -> Result<()> {
+    loop{
+        println!("1 テーブル作成");
+        println!("2 レコード追加");
+        // ........
+        let mut guess = String::new();
+        io::stdin().read_line(&mut guess).expect("Failed to read line.");
+        let num = guess.trim();
+        if num=="1"{
+
+        }else if num=="2"{
+            
+        }else if num=="3"{
+
+        }else if num=="4"{
+
+        }else if num=="5"{
+
+            print!("修正する id の選択：");
+            let mut re = String::new();
+            io::stdin().read_line(&mut re).expect("id が存在しません。");
+            let mut rer = re.trim();
+
+            let result = book.filter(book::id.eq(1)).load::<book>
+
+
+            let cn = Connection::open("library.db")?;
+
+            cn.execute("update book (title text, author text,
+                        page integer, publisher text, price integer)", params![])?;
+
+            
+
+        }else{
+            continue;
+        }
+    }
+}
