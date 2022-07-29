@@ -39,6 +39,8 @@ fn main() -> Result<()> {
     loop {
         println!("1 テーブル作成");
         println!("2 レコード追加");
+        println!("6asc レコードを価格の昇順で表示");
+        println!("6desc レコードを価格の降順で表示");
         // ........
         let mut guess = String::new();
         io::stdin()
@@ -54,6 +56,36 @@ fn main() -> Result<()> {
                 .expect("Failed to read line.");
         } else if guess == "4" {
         } else if guess == "5" {
+        } else if guess == "6asc" {
+            let mut stmt = cn.prepare(
+                "select * from book order by price asc"
+            )?;
+            let mut rows = stmt.query(params![])?;
+            while let Some(row) = rows.next()? {
+                let id: i32 = row.get(0)?;
+                let title: String = row.get(1)?;
+                let auther: String = row.get(2)?;
+                let page: i32 = row.get(3)?;
+                let publisher: String = row.get(4)?;
+                let price: i32 = row.get(5)?;
+                println!("id: {}, title: {}, author: {}, page: {}, publisher: {}, price: {}",
+                    id, title, auther, page, publisher, price);
+            }
+        } else if guess == "6desc" {
+            let mut stmt = cn.prepare(
+                "select * from book order by price desc"
+            )?;
+            let mut rows = stmt.query(params![])?;
+            while let Some(row) = rows.next()? {
+                let id: i32 = row.get(0)?;
+                let title: String = row.get(1)?;
+                let auther: String = row.get(2)?;
+                let page: i32 = row.get(3)?;
+                let publisher: String = row.get(4)?;
+                let price: i32 = row.get(5)?;
+                println!("id: {}, title: {}, auther: {}, page: {}, publisher: {}, price: {}",
+                    id, title, auther, page, publisher, price);
+            }
         } else {
             continue;
         }
