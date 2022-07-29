@@ -1,10 +1,42 @@
 // #[derive(Debug)]
 use rusqlite::{params, Connection, Result};
 use std::io;
+struct Book {
+    id: i32,
+    title: String,
+    auther: String,
+    page: i32,
+    publisher: String,
+    price: i32,
+}
 
 fn main() -> Result<()> {
+    let cn = Connection::open_in_memory()?;
+    cn.execute(
+        "CREATE TABLE book (id INTEGER,title TEXT,auther TEXT,page INTEGER,publisher TEXT,price INTEGER)",
+        params![],
+    )?;
+    let mut stmt = cn.prepare(
+        "INSERT INTO book (id,title,auther,page,publisher,price) VALUES (?,?,?,?,?,?)",
+    )?;
+    stmt.execute(params![
+        20,
+        "吾輩は猫である",
+        "夏目漱石",
+        231,
+        "青空文庫",
+        1600,
+    ])?;
+    stmt.execute(params![
+        10,
+        "ノルウェーの森",
+        "村上春樹",
+        459,
+        "幻冬舎",
+        1400,
+    ])?;
+    println!("テーブルを作成しました。");
     loop {
-        let cn = Connection::open("library.db")?;
         println!("1 テーブル作成");
         println!("2 レコード追加");
         // ........
@@ -12,14 +44,8 @@ fn main() -> Result<()> {
         io::stdin()
             .read_line(&mut guess)
             .expect("Failed to read line.");
-        // geussの改行コードを取り除く
-        let guess = guess.trim();
+        let mut guess = guess.trim();
         if guess == "1" {
-            cn.execute(
-                "CREATE TABLE book (id INTEGER,title TEXT,auther TEXT,page INTEGER,publisher TEXT,price INTEGER)",
-                params![],
-            )?;
-            println!("create table");
         } else if guess == "2" {
         } else if guess == "3" {
             let mut guess = String::new();
@@ -32,5 +58,5 @@ fn main() -> Result<()> {
             continue;
         }
     }
-    Ok()
+    Ok(())
 }
